@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="600" style="border:1px solid red"></canvas>
+</body>
+<script src="clock.js"></script>
+<script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    var cw = canvas.width;
+    var ch = canvas.height;
+    var clock = new Clock({
+        ctx: ctx,
+        bigX: 300,
+        bigY: 300,
+        bigRadius: 150,
+        lineBigWidth: 10
+//        radian: Math.PI / 3
+    });
+</script>
+</html>
