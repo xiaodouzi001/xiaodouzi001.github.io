@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="600" style="border:1px solid red"></canvas>
+</body>
+<script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    function Chain(opts) {
+        for (var key in opts) {
+            this[key] = opts[key];
+        }
+        this.beginRadian = -Math.PI / 2;
+        this.init();
+    }
+    Chain.prototype = {
+        constructor: Chain,
+        init: function () {
+            var _this = this;
+            _this.animate();
+        },
+        animate: function () {
+            this.ctx.clearRect(0,0,canvas.width,canvas.height);
+            this.drawBigCircle();
+            this.drawSmallCircles();
+        },
+        //绘制大圆
+        drawBigCircle: function () {
+            this.ctx.beginPath();
+            this.ctx.arc(this.bigX, this.bigY, this.bigRadius, 0, 2 * Math.PI);
+            this.ctx.lineWidth = 6;
+            this.ctx.stroke();
+        },
+        //绘制单个小圆
+        drawSmallCircle: function (radian) {
+            var ctx = this.ctx;
+            var h = Math.sin(radian) * this.bigRadius;
+            var b = Math.cos(radian) * this.bigRadius;
+            var smallX = this.bigX + b, smallY = this.bigY + h;
+            ctx.beginPath();
+            ctx.arc(smallX, smallY, this.smallRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = "rgb(" + this.getColor() + ")";
+            ctx.fill();
+        },
+        //绘制多个小圆
+        drawSmallCircles: function () {
+            for (var i = 0; i < this.num; i++) {
+                var range = 2 * Math.PI / this.num;
+                this.drawSmallCircle(this.beginRadian + range * i);
+                this.drawText(this.beginRadian + range * i, this.text[i]);
+            }
+        },
+        //获取颜色
+        getColor: function () {
+            var r = Math.random() * 255 | 0;
+            var g = Math.random() * 255 | 0;
+            var b = Math.random() * 255 | 0;
+            return r + "," + g + "," + b;
+        },
+        //绘制文字
+        drawText: function (radian, text) {
+            var ctx = this.ctx;
+            var h = Math.sin(radian) * this.bigRadius;
+            var b = Math.cos(radian) * this.bigRadius;
+            var smallX = this.bigX + b, smallY = this.bigY + h;
+            ctx.save();
+            ctx.beginPath();
+            ctx.font = "20px 微软雅黑";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = "#fff"
+            ctx.fillText(text, smallX, smallY);
+            ctx.restore();
+        }
+    }
+    var text = "PHP,WEB,Java,UI,IOS".split(",");
+    var chain = new Chain({
+        ctx: ctx,
+        text: text,
+        bigX: 300,
+        bigY: 300,
+        bigRadius: 150,
+        smallRadius: 30,
+        num: 5
+    });
+</script>
+</html>

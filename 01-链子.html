@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+<canvas id="canvas" width="1200" height="600" style="border:1px solid red"></canvas>
+</body>
+<script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    function Chain(opts) {
+
+        var defaultData = {
+            ctx: ctx,
+            bigX: 60,
+            bigY: 60,
+            bigRadius: 50,
+            smallRadius: 5,
+            fillStyle: "pink",
+            num: 1
+        }
+        for(var key in opts){
+            defaultData[key] = opts[key];
+        }
+        for (var key in defaultData) {
+            this[key] = defaultData[key];
+        }
+        this.init();
+    }
+    Chain.prototype = {
+        constructor: Chain,
+        init: function () {
+            this.drawBigCircle();
+            this.drawSmallCircles();
+        },
+        drawBigCircle: function () {
+            var ctx = this.ctx;
+            ctx.beginPath();
+            ctx.arc(this.bigX, this.bigY, this.bigRadius, 0, 2 * Math.PI);
+            ctx.stroke();
+        },
+        drawSmallCircle: function (radian) {
+            var ctx = this.ctx;
+            var h = Math.sin(radian) * this.bigRadius;
+            var b = Math.cos(radian) * this.bigRadius;
+            var smallX = this.bigX + b;
+            var smallY = this.bigY + h;
+            ctx.beginPath();
+            ctx.arc(smallX, smallY, this.smallRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = this.fillStyle;
+            ctx.fill();
+        },
+        drawSmallCircles: function () {
+            var num = this.num;
+            var colors = (function () {
+                return ( "aliceblue,antiquewhite,aqua,aquamarine,azure,beige,bisque,black,blanchedalmond,blue," +
+                "blueviolet,brown,burlywood,cadetblue,chartreuse,chocolate,coral,cornflowerblue,cornsilk," +
+                "crimson,cyan,darkblue,darkcyan,darkgoldenrod,darkgray,darkgreen,darkgrey,darkkhaki,darkmagenta," +
+                "darkolivegreen,darkorange,darkorchid,darkred,darksalmon,darkseagreen,darkslateblue,darkslategray," +
+                "darkslategrey,darkturquoise,darkviolet,deeppink,deepskyblue,dimgray,dimgrey,dodgerblue,firebrick," +
+                "floralwhite,forestgreen,fuchsia,gainsboro,ghostwhite,gold,goldenrod,gray,green,greenyellow,grey," +
+                "honeydew,hotpink,indianred,indigo,ivory,khaki,lavender,lavenderblush,lawngreen,lemonchiffon," +
+                "lightblue,lightcoral,lightcyan,lightgoldenrodyellow,lightgray,lightgreen,lightgrey,lightpink," +
+                "lightsalmon,lightseagreen,lightskyblue,lightslategray,lightslategrey,lightsteelblue,lightyellow," +
+                "lime,limegreen,linen,magenta,maroon,mediumaquamarine,mediumblue,mediumorchid,mediumpurple," +
+                "mediumseagreen,mediumslateblue,mediumspringgreen,mediumturquoise,mediumvioletred,midnightblue," +
+                "mintcream,mistyrose,moccasin,navajowhite,navy,oldlace,olive,olivedrab,orange,orangered,orchid," +
+                "palegoldenrod,palegreen,paleturquoise,palevioletred,papayawhip,peachpuff,peru,pink,plum,powderblue," +
+                "purple,rebeccapurple,red,rosybrown,royalblue,saddlebrown,salmon,sandybrown,seagreen,seashell,sienna," +
+                "silver,skyblue,slateblue,slategray,slategrey,snow,springgreen,steelblue,tan,teal,thistle,transparent," +
+                "tomato,turquoise,violet,wheat,white,whitesmoke,yellow,yellowgreen" ).split(',');
+            })();
+            for (var i = 0; i < num; i++) {
+                var radian = 2 * Math.PI / num * i;
+                this.fillStyle = colors[i + 10];
+                this.drawSmallCircle(radian);
+            }
+        }
+
+    }
+    for (var j = 0; j < 5; j++) {
+        for (var i = 0; i < 10; i++) {
+            var opts = {
+                ctx: ctx,
+                bigX: 60 + 120 * i,
+                bigY: 60 + 120 * j,
+                bigRadius: 50,
+                smallRadius: 5,
+                fillStyle: "pink",
+                num: 1 + 10 * j + i
+            }
+            var chain = new Chain(opts);
+        }
+    }
+
+</script>
+</html>

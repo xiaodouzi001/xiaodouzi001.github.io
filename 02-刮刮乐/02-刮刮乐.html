@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+    <style>
+        #canvas {
+            display: block;
+            border: 1px solid red;
+            background: url("烤箱.jpg");
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="240" height="240"></canvas>
+</body>
+<script src="jquery-2.1.4.js"></script>
+<script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    var cw = canvas.width;
+    var ch = canvas.height;
+    ctx.fillStyle = "rgb(211,211,211)";
+    ctx.fillRect(0, 0, cw, ch);
+    $('#canvas').on('mousedown', function () {
+        $('#canvas').on('mousemove', function (e) {
+            var x = e.pageX-canvas.offsetLeft;
+            var y = e.pageY-canvas.offsetTop;
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.beginPath();
+            ctx.arc(x,y, 30, 0, Math.PI * 2);
+            ctx.fill();
+            var datas = ctx.getImageData(0, 0, cw, ch).data;
+            //记录没有被刮过的
+            var scrape = 0;
+            for (var i = 0; i < datas.length; i += 4) {
+                if (datas[i] == 211 && datas[i + 1] == 211 && datas[i + 2] == 211 && datas[i + 3] == 255) {
+                    scrape++;
+                }
+            }
+            if (scrape < cw * ch / 2) {
+                ctx.clearRect(0, 0, cw, ch);
+            }
+        });
+    });
+    $('#canvas').on('mouseup', function () {
+        $('#canvas').off("mousemove");
+    });
+
+
+</script>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        canvas {
+            display: block;
+            margin: 100px auto;
+            border: 2px solid orange;
+        }
+    </style>
+</head>
+
+<body>
+<canvas id="canvas" width="600" height="600"></canvas>
+<script type="text/javascript">
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext('2d');
+    var cW = canvas.width;
+    var cH = canvas.height;
+    var radius = 180;
+    var date = getDate();
+    drawClock(date.hour, date.minute, date.second);
+    var timer = setInterval(function () {
+        date = getDate();
+        drawClock(date.hour, date.minute, date.second);
+    }, 1000);
+
+    function drawClock(hour, minute, second) {
+        ctx.clearRect(0, 0, cW, cH);
+        drawCircle(cW / 2, cH / 2, radius + 14, 10, 'coral');
+        drawCircle(cW / 2, cH / 2, radius, 8, 'orange');
+        drawCarve();
+        drawNumber();
+        drawHour(hour);
+        drawMinute(minute);
+        drawSecond(second);
+        drawArc();
+        drawTime();
+    }
+    function getDate() {
+        var date = new Date();
+        var second = date.getSeconds();
+        var minute = date.getMinutes() + second / 60;
+        var hour = date.getHours() + minute / 60;
+        return {
+            second: Math.floor(second),
+            minute: Math.floor(minute),
+            hour: Math.floor(hour)
+        }
+    }
+    //绘制圆
+    function drawCircle(x, y, r, lineWidth, color) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = color || 'orange';
+        ctx.lineWidth = lineWidth || 10;
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+    }
+    //绘制刻度
+    function drawCarve() {
+        for (var i = 0; i < 60; i++) {
+            ctx.save();
+            //设置不同的刻度粗细
+            if (i % 5 == 0) {
+                //小时刻度
+                ctx.lineWidth = 8;
+            } else {
+                //分刻度
+                ctx.lineWidth = 4;
+            }
+            //设置刻度颜色
+            ctx.strokeStyle = "orange";
+            //先设置(0,0)点
+            ctx.translate(cW / 2, cH / 2);
+            //在设置旋转角度
+            ctx.rotate(i * 6 * Math.PI / 180);
+            //画时针刻度
+            ctx.beginPath();
+            if (i % 5 == 0) {
+                ctx.moveTo(0, -(radius - 20));
+            } else {
+                ctx.moveTo(0, -(radius - 10));
+            }
+            ctx.lineTo(0, -radius);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+    //绘制底部时间
+    function drawTime() {
+        ctx.save();
+        ctx.fillStyle = 'chocolate';
+        ctx.font = '30px Microsoft YaHei';
+        ctx.fillStyle = 'chocolate';
+        ctx.textAlign = 'center';
+        var time = '现在时间是：' + addZero(date.hour) + "：" + addZero(date.minute) + "：" + addZero(date.second);
+//				var textW = ctx.measureText(time);
+        ctx.fillText(time, cW / 2, cH - 20);
+        ctx.restore();
+    }
+    function addZero(num) {
+        return num > 9 ? "" + num : "0" + num;
+    }
+    //绘制时间数
+    function drawNumber() {
+        ctx.save();
+        ctx.font = "30px Microsoft YaHei";
+        ctx.fillStyle = 'chocolate'
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        for (var i = 1; i <= 12; i++) {
+            var angle = -(Math.PI / 2) + 2 * Math.PI / 12 * i;
+            var x = cW / 2 + (radius - 40) * Math.cos(angle);
+            var y = cH / 2 + (radius - 40) * Math.sin(angle);
+            ctx.fillText(i, x, y);
+        }
+        ctx.restore();
+    }
+    //绘制时针
+    function drawHour(hour) {
+        ctx.save();
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = 'chocolate';
+        ctx.translate(cW / 2, cH / 2);
+        ctx.rotate(hour * 30 * Math.PI / radius);
+        ctx.beginPath();
+        ctx.moveTo(0, 20);
+        ctx.lineTo(0, -(radius - 80));
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+    }
+    //绘制分针
+    function drawMinute(minute) {
+        ctx.save();
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = 'chocolate';
+        ctx.translate(cW / 2, cH / 2);
+        ctx.rotate(minute * 6 * Math.PI / radius);
+        ctx.beginPath();
+        ctx.moveTo(0, 20);
+        ctx.lineTo(0, -(radius - 50));
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+    }
+    //绘制秒针
+    function drawSecond(second) {
+        ctx.save();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'chocolate';
+        ctx.translate(cW / 2, cH / 2);
+        ctx.rotate(second * 6 * Math.PI / radius);
+        ctx.beginPath();
+        ctx.moveTo(0, 20);
+        ctx.lineTo(0, -(radius - 20));
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+    }
+    //绘制中间的小圆
+    function drawArc() {
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = 'gold';
+        ctx.lineWidth = 6;
+        ctx.arc(cW / 2, cH / 2, 6, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+    }
+</script>
+</body>
+
+</html>
