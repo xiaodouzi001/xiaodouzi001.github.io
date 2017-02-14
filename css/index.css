@@ -1,0 +1,19 @@
+.songmanager-container .songinfo-table .column-1,
+.songmanager-container .songinfo-table .column-2,
+.songmanager-container .songinfo-table .column-3 {
+    width: 200px;
+    height: 40px;
+    line-height: 40px;
+    display: inline-block;
+    /*padding: 5px;*/
+    text-align: center;
+}
+
+.songmanager-container .songinfo-table .table-header {
+    background-color: lightblue;
+    margin-top: 10px;
+}
+
+.songmanager-container .songinfo-table {
+    width: 600px;
+}
